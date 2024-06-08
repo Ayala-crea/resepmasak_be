@@ -90,3 +90,26 @@ func GetAllReceipe(c *fiber.Ctx) error {
 
 	return c.Status(http.StatusOK).JSON(response)
 }
+func GetReceipeById(c *fiber.Ctx) error {
+	// Cek token header autentikasi
+	token := c.Get("login")
+	if token == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "Header tidak ada")
+	}
+
+	// mencari id dari data
+	id := c.Query("recipe_id")
+	if id == "" {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "ID task tidak boleh kosong"})
+	}
+
+	db := c.Locals("db").(*gorm.DB)
+
+	receipe, err := repo.GetReceipetById(db, id)
+	if err != nil {
+		// Jika terjadi kesalahan, mengembalikan respons error
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Data Tidak Ditemukan"})
+	}
+
+	return c.JSON(fiber.Map{"code": http.StatusOK, "success": true, "status": "success", "data": receipe})
+}

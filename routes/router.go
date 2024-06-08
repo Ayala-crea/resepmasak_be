@@ -15,6 +15,7 @@ func SetupTaskRoutes(app *fiber.App) {
 
 	app.Post("/receipe", controller.CreateReceipe)
 	app.Get("/receipe", controller.GetAllReceipe)
+	app.Get("receipe/get", controller.GetReceipeById)
 
 	// app.Get("/tasks", controller.GetAllTask)
 	// app.Get("/task/get", controller.GetTaskById)

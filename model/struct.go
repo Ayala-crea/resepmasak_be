@@ -28,7 +28,7 @@ type JWTClaims struct {
 }
 
 type Receipt struct {
-	IdReceipe   uint      `gorm:"primaryKey;column:id_receipe" json:"id_receipe"`
+	IdReceipe   uint      `gorm:"primaryKey;column:recipe_id" json:"recipe_id"`
 	IdUser      int       `gorm:"column:id_user" json:"id_user"`
 	Title       string    `gorm:"column:title" json:"title"`
 	Description string    `gorm:"column:description" json:"description"`

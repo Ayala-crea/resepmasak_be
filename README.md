@@ -30,3 +30,7 @@
         key:LOGIN<br>
         Value: Token<br>
     }<br>
+
+
+~ API GET BY ID RECIPE <br>
+http://127.0.0.1:3000/receipe/get?recipe_id=?<br>

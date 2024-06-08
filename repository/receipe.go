@@ -20,3 +20,11 @@ func GetAllReceipe(db *gorm.DB) ([]model.Receipt, error) {
 	}
 	return receipe, nil
 }
+
+func GetReceipetById(db *gorm.DB, id string) (model.Receipt, error) {
+	var receipe model.Receipt
+	if err := db.First(&receipe, "recipe_id = ?", id).Error; err != nil {
+		return receipe, err
+	}
+	return receipe, nil
+}
