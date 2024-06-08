@@ -152,9 +152,23 @@ func UpdateReceipe(c *fiber.Ctx) error {
 
 	db := c.Locals("db").(*gorm.DB)
 
-	_, err := repo.GetReceipetById(db, id)
+	existingRecipe, err := repo.GetReceipetById(db, id)
 	if err != nil {
 		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": "ID task tidak ditemukan"})
+	}
+
+	// Ambil file image jika ada
+	file, err := c.FormFile("image")
+	if err == nil {
+		// Simpan file image baru
+		imagePath := fmt.Sprintf("./img/%d_%s", time.Now().UnixNano(), file.Filename)
+		if err := c.SaveFile(file, imagePath); err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal menyimpan file"})
+		}
+		updateRecipe.Image = imagePath
+	} else {
+		// Jika tidak ada file baru, gunakan path gambar lama
+		updateRecipe.Image = existingRecipe.Image
 	}
 
 	if err := repo.UpdateReceipt(db, id, updateRecipe); err != nil {

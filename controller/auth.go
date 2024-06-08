@@ -46,7 +46,7 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 
-	// Cari user di database berdasarkan username menggunakan repository
+	// Cari user di database berdasarkan username atau email menggunakan repository
 	userData, err := repo.GetUserByEmail(db, user.Email)
 	if err != nil {
 		userData, err = repo.GetUserByUsername(db, user.Username)
@@ -72,16 +72,17 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 
-	role, err := repo.GetUserById(db, uint(user.IdRole))
+	// Dapatkan role berdasarkan IdRole
+	role, err := repo.GetRoleById(db, userData.IdRole)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Gagal Mendapatkan Token",
+			"message": "Gagal Mendapatkan Role",
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"token": token,
-		"role" : role,
+		"role":  role,
 	})
 }
 

@@ -61,6 +61,18 @@ func GetUserById(db *gorm.DB, userID uint) (*model.Users, error) {
 	return &user, nil
 }
 
+func GetRoleById(db *gorm.DB, roleID int) (*model.Roles, error) {
+	var role model.Roles
+	result := db.First(&role, roleID)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return &role, nil
+}
+
 func GenerateToken(user *model.Users) (string, error) {
 	claims := &model.JWTClaims{
 		IdUser: user.IdUser,
