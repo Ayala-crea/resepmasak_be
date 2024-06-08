@@ -44,3 +44,13 @@ http://127.0.0.1:3000/receipe/delete?recipe_id=1 <br>
     "status": "success",
     "success": true
 }
+
+~ API UPDATE
+http://127.0.0.1:3000/receipe/update?recipe_id=1
+
+BODY {
+    "title": "Nasi Goreng Banglades",
+    "description": "Masakan Khas Indonesia dengan cita rasa yang special",
+    "ingredients": "siapkan bahan bahan masak, masukan minyak, blendir semua bahan bahan, masukan telor ke wajan yang sudah panas, masukan bumbu yang sudah dihaluskan, oseng oseng sampai bau nya harum, kemudia masukkan nasi yang sudah disiapkan, aduk merata dengan bumbu yang tadi dimasukkan, tambahkan kecap, sajikan",
+    "img": ""
+}
