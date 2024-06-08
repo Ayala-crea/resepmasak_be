@@ -3,7 +3,9 @@ package controller
 import (
 	"Ayala-Crea/ResepBe/model"
 	repo "Ayala-Crea/ResepBe/repository"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
@@ -34,10 +36,25 @@ func CreateReceipe(c *fiber.Ctx) error {
 
 	var receipe model.Receipt
 
+	// Ambil data form
 	if err := c.BodyParser(&receipe); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
+	// Ambil file image
+	file, err := c.FormFile("image")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Gagal mengambil file"})
+	}
+
+	// Simpan file image
+	imagePath := fmt.Sprintf("./img/%d_%s", time.Now().UnixNano(), file.Filename)
+	if err := c.SaveFile(file, imagePath); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal menyimpan file"})
+	}
+
+	// Set path image di model
+	receipe.Image = imagePath
 	receipe.IdUser = int(idUser)
 
 	db := c.Locals("db").(*gorm.DB)
