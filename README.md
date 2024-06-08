@@ -34,3 +34,13 @@
 
 ~ API GET BY ID RECIPE <br>
 http://127.0.0.1:3000/receipe/get?recipe_id=?<br>
+
+~ API DELETE BY ID RECIPE <br>
+http://127.0.0.1:3000/receipe/delete?recipe_id=1 <br>
+
+{
+    "code": 200,
+    "message": "Receipt berhasil dihapus",
+    "status": "success",
+    "success": true
+}

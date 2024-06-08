@@ -28,3 +28,17 @@ func GetReceipetById(db *gorm.DB, id string) (model.Receipt, error) {
 	}
 	return receipe, nil
 }
+
+func UpdateReceipt(db *gorm.DB, id string, updateReceipt model.Receipt) error {
+	if err := db.Model(&model.Receipt{}).Where("recipe_id = ?", id).Updates(updateReceipt).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteReceipt(db *gorm.DB, id uint) error {
+	if err := db.Delete(&model.Receipt{}, id).Error; err != nil {
+		return err
+	}
+	return nil
+}

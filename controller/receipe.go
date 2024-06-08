@@ -113,3 +113,62 @@ func GetReceipeById(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{"code": http.StatusOK, "success": true, "status": "success", "data": receipe})
 }
+
+func UpdateReceipe(c *fiber.Ctx) error {
+	// Cek token header autentikasi
+	token := c.Get("login")
+	if token == "" {
+		return fiber.NewError(http.StatusBadRequest, "Header tidak ada")
+	}
+
+	// Mengambil Parameter ID
+	id := c.Query("recipe_id")
+	if id == "" {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "ID task tidak ditemukan"})
+	}
+
+	var updateRecipe model.Receipt
+
+	if err := c.BodyParser(&updateRecipe); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Gagal memproses request"})
+	}
+
+	db := c.Locals("db").(*gorm.DB)
+
+	_, err := repo.GetReceipetById(db, id)
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": "ID task tidak ditemukan"})
+	}
+
+	if err := repo.UpdateReceipt(db, id, updateRecipe); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal memperbarui receipt"})
+	}
+
+	return c.JSON(fiber.Map{"code": http.StatusOK, "success": true, "status": "success", "message": "Receipt berhasil diperbarui"})
+}
+
+func DeleteReceipt(c *fiber.Ctx) error {
+	// Cek token header autentikasi
+	token := c.Get("login")
+	if token == "" {
+		return fiber.NewError(http.StatusBadRequest, "Header tidak ada")
+	}
+
+	id := c.Query("recipe_id")
+	if id == "" {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "ID task tidak ditemukan"})
+	}
+
+	db := c.Locals("db").(*gorm.DB)
+
+	receipt, err := repo.GetReceipetById(db, id)
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": "ID task tidak ditemukan"})
+	}
+
+	if err := repo.DeleteReceipt(db, receipt.IdReceipe); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Gagal Menghapus Data"})
+	}
+
+	return c.JSON(fiber.Map{"code": http.StatusOK, "success": true, "status": "success", "message": "Receipt berhasil dihapus"})
+}
