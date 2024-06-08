@@ -12,3 +12,11 @@ func InsertReceipt(db *gorm.DB, receipe model.Receipt) error {
 	}
 	return nil
 }
+
+func GetAllReceipe(db *gorm.DB) ([]model.Receipt, error) {
+	var receipe []model.Receipt
+	if err := db.Find(&receipe).Error; err != nil {
+		return nil, err
+	}
+	return receipe, nil
+}

@@ -23,3 +23,10 @@
     "ingredients": "siapkan bahan bahan masak, masukan minyak, blendir semua bahan bahan, masukan telor ke wajan yang sudah panas, masukan bumbu yang sudah dihaluskan, oseng oseng sampai bau nya harum, kemudia masukkan nasi yang sudah disiapkan, aduk merata dengan bumbu yang tadi dimasukkan, tambahkan kecap, sajikan",<br>
     "img": ""
 }
+
+~ API GET ALL RECEIPE <br>
+    http://127.0.0.1:3000/receipe<br>
+    Headers: {<br>
+        key:LOGIN<br>
+        Value: Token<br>
+    }<br>
