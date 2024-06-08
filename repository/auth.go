@@ -1,11 +1,13 @@
 package repository
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"Ayala-Crea/ResepBe/model"
+	"errors"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"time"
 )
 
 func CreateUser(db *gorm.DB, user *model.Users) error {
@@ -38,10 +40,22 @@ func GetUserByUsername(db *gorm.DB, username string) (*model.Users, error) {
 	return &user, nil
 }
 
+func GetUserByEmail(db *gorm.DB, email string) (*model.Users, error) {
+	var user model.Users
+	result := db.Where("email = ?", email).First(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
+}
+
 func GetUserById(db *gorm.DB, userID uint) (*model.Users, error) {
 	var user model.Users
 	result := db.First(&user, userID)
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, result.Error
 	}
 	return &user, nil

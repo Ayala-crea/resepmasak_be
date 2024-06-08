@@ -47,11 +47,14 @@ func LoginUser(c *fiber.Ctx) error {
 	}
 
 	// Cari user di database berdasarkan username menggunakan repository
-	userData, err := repo.GetUserByUsername(db, user.Username)
+	userData, err := repo.GetUserByEmail(db, user.Email)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "Username atau Password Salah",
-		})
+		userData, err = repo.GetUserByUsername(db, user.Username)
+		if err != nil {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"message": "Username atau Password Salah",
+			})
+		}
 	}
 
 	// Verifikasi password
@@ -69,8 +72,16 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 
+	role, err := repo.GetUserById(db, uint(user.IdRole))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal Mendapatkan Token",
+		})
+	}
+
 	return c.JSON(fiber.Map{
 		"token": token,
+		"role" : role,
 	})
 }
 

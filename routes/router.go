@@ -13,6 +13,8 @@ func SetupTaskRoutes(app *fiber.App) {
 	// Endpoint untuk cek sudah login atau belum
 	app.Get("/getme", controller.GetMe)
 
+	app.Post("/receipe", controller.CreateReceipe)
+
 	// app.Get("/tasks", controller.GetAllTask)
 	// app.Get("/task/get", controller.GetTaskById)
 	// app.Get("/task/taskuser", controller.GetTaskByIdUser)
